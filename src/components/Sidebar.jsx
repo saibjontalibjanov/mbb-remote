@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom'
 
 function Sidebar({ toggled, onToggle }) {
   const location = useLocation()
-  const [componentsOpen, setComponentsOpen] = useState(false)
   const [pagesOpen, setPagesOpen] = useState(false)
 
   const isActive = (path) => location.pathname === path
@@ -33,30 +32,6 @@ function Sidebar({ toggled, onToggle }) {
 
       <hr className="sidebar-divider" />
 
-      <div className="sidebar-heading">Interface</div>
-
-      {/* Components collapse */}
-      <li className={`nav-item${isActive('/buttons') || isActive('/cards') ? ' active' : ''}`}>
-        <a
-          className={`nav-link${componentsOpen ? '' : ' collapsed'}`}
-          href="#"
-          onClick={(e) => { e.preventDefault(); setComponentsOpen(!componentsOpen) }}
-          aria-expanded={componentsOpen}
-        >
-          <i className="fas fa-fw fa-cog"></i>
-          <span>Components</span>
-        </a>
-        <div className={`collapse${componentsOpen ? ' show' : ''}`}>
-          <div className="bg-white py-2 collapse-inner rounded">
-            <h6 className="collapse-header">Custom Components:</h6>
-            <Link className={`collapse-item${isActive('/buttons') ? ' active' : ''}`} to="/buttons">Buttons</Link>
-            <Link className={`collapse-item${isActive('/cards') ? ' active' : ''}`} to="/cards">Cards</Link>
-          </div>
-        </div>
-      </li>
-
-      <hr className="sidebar-divider" />
-
       <div className="sidebar-heading">Addons</div>
 
       {/* Pages collapse */}
@@ -73,13 +48,13 @@ function Sidebar({ toggled, onToggle }) {
         <div className={`collapse${pagesOpen ? ' show' : ''}`}>
           <div className="bg-white py-2 collapse-inner rounded">
             <h6 className="collapse-header">Login Screens:</h6>
-            <Link className="collapse-item" to="/login">Login</Link>
-            <Link className="collapse-item" to="/register">Register</Link>
-            <Link className="collapse-item" to="/forgot-password">Forgot Password</Link>
+            <Link className={`collapse-item${isActive('/login') ? ' active' : ''}`} to="/login">Login</Link>
+            <Link className={`collapse-item${isActive('/register') ? ' active' : ''}`} to="/register">Register</Link>
+            <Link className={`collapse-item${isActive('/forgot-password') ? ' active' : ''}`} to="/forgot-password">Forgot Password</Link>
             <div className="collapse-divider"></div>
             <h6 className="collapse-header">Other Pages:</h6>
-            <Link className="collapse-item" to="/404">404 Page</Link>
-            <Link className="collapse-item" to="/blank">Blank Page</Link>
+            <Link className={`collapse-item${isActive('/404') ? ' active' : ''}`} to="/404">404 Page</Link>
+            <Link className={`collapse-item${isActive('/blank') ? ' active' : ''}`} to="/blank">Blank Page</Link>
           </div>
         </div>
       </li>

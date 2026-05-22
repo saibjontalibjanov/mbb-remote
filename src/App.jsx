@@ -3,8 +3,6 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import Dashboard from './pages/Dashboard'
-import Buttons from './pages/Buttons'
-import Cards from './pages/Cards'
 import Charts from './pages/Charts'
 import Tables from './pages/Tables'
 import Blank from './pages/Blank'
@@ -18,8 +16,6 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/buttons" element={<Buttons />} />
-      <Route path="/cards" element={<Cards />} />
       <Route path="/charts" element={<Charts />} />
       <Route path="/tables" element={<Tables />} />
       <Route path="/blank" element={<Blank />} />
