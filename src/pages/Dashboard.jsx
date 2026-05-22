@@ -59,9 +59,9 @@ function Dashboard() {
       {/* Table Card */}
       <div className="card shadow mb-4">
         <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 className="m-0 font-weight-bold text-primary">Ishchilar Ro'yxati</h6>
+          <h6 className="m-0 font-weight-bold text-primary">Xizmat ko`rsatilganlar</h6>
           <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>
-            <i className="fas fa-plus fa-sm mr-1"></i> Ishchi qo'shish
+            <i className="fas fa-plus fa-sm mr-1"></i> Qo`shish
           </button>
         </div>
         <div className="card-body">
@@ -69,32 +69,35 @@ function Dashboard() {
             <table className="table table-bordered" width="100%" cellSpacing="0">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Ism</th>
-                  <th>Familiya</th>
+                  <th>ID</th>
+                  <th>Bo`lim</th>
                   <th>Lavozim</th>
-                  <th>Xizmat turi</th>
+                  <th>F.I.O</th>
+                  <th>IP Address</th>
                   <th>Sana</th>
-                  <th>Amallar</th>
+                  <th>Xizmat turi</th>
+                  <th>Domen</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="text-center text-gray-500 py-4">
+                    <td colSpan="8" className="text-center text-gray-500 py-4">
                       <i className="fas fa-inbox fa-2x mb-2 d-block text-gray-300"></i>
-                      Hozircha ma'lumot yo'q. Ishchi qo'shish tugmasini bosing.
+                      Hozircha ma'lumot yo'q.
                     </td>
                   </tr>
                 ) : (
                   rows.map((row, i) => (
                     <tr key={row.id}>
                       <td>{i + 1}</td>
-                      <td>{row.ism}</td>
-                      <td>{row.familiya}</td>
+                      <td>{row.bolim}</td>
                       <td>{row.lavozim}</td>
-                      <td>{row.xizmat}</td>
+                      <td>{row.fio}</td>
+                      <td>{row.ipaddress}</td>
                       <td>{row.sana}</td>
+                      <td>{row.txt}</td>
+                      <td>{row.domenname}</td>
                       <td>
                         <button
                           className="btn btn-danger btn-sm"
@@ -118,31 +121,20 @@ function Dashboard() {
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Yangi Ishchi Qo'shish</h5>
+                <h5 className="modal-title">Yangi Ma`lumot Kiritish</h5>
                 <button className="close" onClick={() => setShowModal(false)}>
                   <span>&times;</span>
                 </button>
               </div>
               <div className="modal-body">
                 <div className="form-group">
-                  <label>Ism</label>
+                  <label>B`olim</label>
                   <input
                     type="text"
                     className="form-control"
-                    name="ism"
-                    placeholder="Ismni kiriting"
-                    value={form.ism}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Familiya</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="familiya"
-                    placeholder="Familiyani kiriting"
-                    value={form.familiya}
+                    name="bolim"
+                    placeholder="Bolimni kiriting"
+                    value={form.bolim}
                     onChange={handleChange}
                   />
                 </div>
@@ -158,13 +150,46 @@ function Dashboard() {
                   />
                 </div>
                 <div className="form-group">
+                  <label>F.I.O</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="fio"
+                    placeholder="F.I.O ni kiriting"
+                    value={form.fio}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>IP Manzil</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="ipaddress"
+                    placeholder="IP Addressni kiriting"
+                    value={form.ipaddress}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
                   <label>Xizmat turi</label>
                   <input
                     type="text"
                     className="form-control"
-                    name="xizmat"
+                    name="txt"
                     placeholder="Xizmat turini kiriting"
-                    value={form.xizmat}
+                    value={form.txt}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Domen</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="domen"
+                    placeholder="Domen name ni kiriting"
+                    value={form.domen}
                     onChange={handleChange}
                   />
                 </div>

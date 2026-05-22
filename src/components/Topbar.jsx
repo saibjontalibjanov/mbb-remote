@@ -33,7 +33,7 @@ function Topbar({ onSidebarToggle }) {
           <i className="fa fa-bars"></i>
         </button>
 
-        {/* Topbar Search */}
+        {/* Topbar Search
         <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
           <div className="input-group">
             <input
@@ -48,10 +48,10 @@ function Topbar({ onSidebarToggle }) {
               </button>
             </div>
           </div>
-        </form>
+        </form> */}
 
         <ul className="navbar-nav ml-auto">
-          {/* Search (mobile) */}
+          {/* Search (mobile)
           <li className="nav-item dropdown no-arrow d-sm-none">
             <a
               className="nav-link dropdown-toggle"
@@ -74,9 +74,9 @@ function Topbar({ onSidebarToggle }) {
                 </form>
               </div>
             )}
-          </li>
+          </li> */}
 
-          {/* Alerts */}
+          {/* Alerts
           <li className="nav-item dropdown no-arrow mx-1">
             <a
               className="nav-link dropdown-toggle"
@@ -125,9 +125,9 @@ function Topbar({ onSidebarToggle }) {
                 <a className="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
               </div>
             )}
-          </li>
+          </li> */}
 
-          {/* Messages */}
+          {/* Messages
           <li className="nav-item dropdown no-arrow mx-1">
             <a
               className="nav-link dropdown-toggle"
@@ -159,9 +159,9 @@ function Topbar({ onSidebarToggle }) {
                 <a className="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
               </div>
             )}
-          </li>
+          </li> */}
 
-          <div className="topbar-divider d-none d-sm-block"></div>
+          {/* <div className="topbar-divider d-none d-sm-block"></div> */}
 
           {/* User */}
           <li className="nav-item dropdown no-arrow">
@@ -173,23 +173,6 @@ function Topbar({ onSidebarToggle }) {
               <span className="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
               <img className="img-profile rounded-circle" src="/img/undraw_profile.svg" alt="profile" />
             </a>
-            {userOpen && (
-              <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in show">
-                <a className="dropdown-item" href="#">
-                  <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Profile
-                </a>
-                <a className="dropdown-item" href="#">
-                  <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i> Settings
-                </a>
-                <a className="dropdown-item" href="#">
-                  <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i> Activity Log
-                </a>
-                <div className="dropdown-divider"></div>
-                <a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setShowLogoutModal(true) }}>
-                  <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Logout
-                </a>
-              </div>
-            )}
           </li>
         </ul>
       </nav>

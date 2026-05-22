@@ -43,35 +43,29 @@ function Sidebar({ toggled, onToggle }) {
           aria-expanded={pagesOpen}
         >
           <i className="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
+          <span>Ro`yxatlar</span>
         </a>
         <div className={`collapse${pagesOpen ? ' show' : ''}`}>
           <div className="bg-white py-2 collapse-inner rounded">
-            <h6 className="collapse-header">Login Screens:</h6>
-            <Link className={`collapse-item${isActive('/login') ? ' active' : ''}`} to="/login">Login</Link>
-            <Link className={`collapse-item${isActive('/register') ? ' active' : ''}`} to="/register">Register</Link>
-            <Link className={`collapse-item${isActive('/forgot-password') ? ' active' : ''}`} to="/forgot-password">Forgot Password</Link>
+            <h6 className="collapse-header">Asosiy:</h6>
+            <Link className={`collapse-item${isActive('/login') ? ' active' : ''}`} to="/filter-bolimlar">Bo`limlar</Link>
+            <Link className={`collapse-item${isActive('/register') ? ' active' : ''}`} to="/filter-ishchilar">Ishchilar</Link>
+            <Link className={`collapse-item${isActive('/forgot-password') ? ' active' : ''}`} to="/filter-lavozimlar">Lavozimlar</Link>
             <div className="collapse-divider"></div>
-            <h6 className="collapse-header">Other Pages:</h6>
-            <Link className={`collapse-item${isActive('/404') ? ' active' : ''}`} to="/404">404 Page</Link>
-            <Link className={`collapse-item${isActive('/blank') ? ' active' : ''}`} to="/blank">Blank Page</Link>
+            <h6 className="collapse-header">Boshqalar</h6>
+            <Link className={`collapse-item${isActive('/404') ? ' active' : ''}`} to="/filter-jihozlar">Jihozlar</Link>
+            <Link className={`collapse-item${isActive('/blank') ? ' active' : ''}`} to="/filter-ip">IP Address</Link>
           </div>
         </div>
       </li>
 
       {/* Charts */}
-      <li className={`nav-item${isActive('/charts') ? ' active' : ''}`}>
-        <Link className="nav-link" to="/charts">
-          <i className="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span>
-        </Link>
-      </li>
 
       {/* Tables */}
       <li className={`nav-item${isActive('/tables') ? ' active' : ''}`}>
         <Link className="nav-link" to="/tables">
           <i className="fas fa-fw fa-table"></i>
-          <span>Tables</span>
+          <span>Umumiy Ro`yxatlar</span>
         </Link>
       </li>
 
