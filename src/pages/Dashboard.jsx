@@ -1,34 +1,72 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Layout from '../components/Layout'
 
-const emptyForm = { ism: '', familiya: '', lavozim: '', xizmat: '', sana: '' }
+const emptyForm = { bolim: '', lavozim: '', fio: '', ipaddress: '', txt: '', domenname: '', sana: '' }
 
 function Dashboard() {
   const [rows, setRows] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [form, setForm] = useState(emptyForm)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const API = 'http://localhost:5000/api'
+
+  const fetchRows = async () => {
+    try {
+      const res = await fetch(`${API}/xizmatlar`)
+      const data = await res.json()
+      setRows(data)
+    } catch (err) {
+      console.error('Server bilan ulanishda xatolik:', err)
+    }
+  }
+
+  useEffect(() => {
+    fetchRows()
+  }, [])
 
   const statCards = [
     { label: "Ishchilar soni", value: rows.length, icon: 'fa-users', color: 'primary' },
-    { label: "Xizmat ko'rsatilgan", value: rows.filter(r => r.xizmat).length, icon: 'fa-handshake', color: 'success' },
+    { label: "Xizmat ko'rsatilgan", value: rows.filter(r => r.txt).length, icon: 'fa-handshake', color: 'success' },
   ]
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
-  const handleAdd = () => {
-    if (!form.ism || !form.familiya) return
-    setRows([...rows, { ...form, id: Date.now() }])
-    setForm(emptyForm)
-    setShowModal(false)
+  const handleAdd = async () => {
+    if (!form.fio || !form.bolim) {
+      setError("F.I.O va Bo'lim majburiy!")
+      return
+    }
+    setError('')
+    setLoading(true)
+    try {
+      const res = await fetch(`${API}/xizmatlar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      })
+      const newRow = await res.json()
+      setRows([...rows, newRow])
+      setForm(emptyForm)
+      setShowModal(false)
+    } catch (err) {
+      setError('Saqlashda xatolik yuz berdi!')
+    }
+    setLoading(false)
   }
 
-  const handleDelete = (id) => {
-    setRows(rows.filter(r => r.id !== id))
+  const handleDelete = async (id) => {
+    try {
+      await fetch(`${API}/xizmatlar/${id}`, { method: 'DELETE' })
+      setRows(rows.filter(r => r.id !== id))
+    } catch (err) {
+      console.error('O\'chirishda xatolik:', err)
+    }
   }
 
   return (
     <Layout>
-      {/* Page Heading */}
       <div className="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
       </div>
@@ -59,9 +97,9 @@ function Dashboard() {
       {/* Table Card */}
       <div className="card shadow mb-4">
         <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 className="m-0 font-weight-bold text-primary">Xizmat ko`rsatilganlar</h6>
-          <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>
-            <i className="fas fa-plus fa-sm mr-1"></i> Qo`shish
+          <h6 className="m-0 font-weight-bold text-primary">Xizmat ko'rsatilganlar</h6>
+          <button className="btn btn-primary btn-sm" onClick={() => { setShowModal(true); setError('') }}>
+            <i className="fas fa-plus fa-sm mr-1"></i> Qo'shish
           </button>
         </div>
         <div className="card-body">
@@ -69,20 +107,21 @@ function Dashboard() {
             <table className="table table-bordered" width="100%" cellSpacing="0">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Bo`lim</th>
+                  <th>#</th>
+                  <th>Bo'lim</th>
                   <th>Lavozim</th>
                   <th>F.I.O</th>
                   <th>IP Address</th>
                   <th>Sana</th>
                   <th>Xizmat turi</th>
                   <th>Domen</th>
+                  <th>Amallar</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="text-center text-gray-500 py-4">
+                    <td colSpan="9" className="text-center text-gray-500 py-4">
                       <i className="fas fa-inbox fa-2x mb-2 d-block text-gray-300"></i>
                       Hozircha ma'lumot yo'q.
                     </td>
@@ -99,10 +138,7 @@ function Dashboard() {
                       <td>{row.txt}</td>
                       <td>{row.domenname}</td>
                       <td>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(row.id)}
-                        >
+                        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(row.id)}>
                           <i className="fas fa-trash"></i>
                         </button>
                       </td>
@@ -121,92 +157,54 @@ function Dashboard() {
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Yangi Ma`lumot Kiritish</h5>
+                <h5 className="modal-title">Yangi Ma'lumot Kiritish</h5>
                 <button className="close" onClick={() => setShowModal(false)}>
                   <span>&times;</span>
                 </button>
               </div>
               <div className="modal-body">
+                {error && <div className="alert alert-danger">{error}</div>}
                 <div className="form-group">
-                  <label>B`olim</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="bolim"
-                    placeholder="Bolimni kiriting"
-                    value={form.bolim}
-                    onChange={handleChange}
-                  />
+                  <label>Bo'lim <span className="text-danger">*</span></label>
+                  <input type="text" className="form-control" name="bolim"
+                    placeholder="Bo'limni kiriting" value={form.bolim} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Lavozim</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="lavozim"
-                    placeholder="Lavozimni kiriting"
-                    value={form.lavozim}
-                    onChange={handleChange}
-                  />
+                  <input type="text" className="form-control" name="lavozim"
+                    placeholder="Lavozimni kiriting" value={form.lavozim} onChange={handleChange} />
                 </div>
                 <div className="form-group">
-                  <label>F.I.O</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="fio"
-                    placeholder="F.I.O ni kiriting"
-                    value={form.fio}
-                    onChange={handleChange}
-                  />
+                  <label>F.I.O <span className="text-danger">*</span></label>
+                  <input type="text" className="form-control" name="fio"
+                    placeholder="F.I.O ni kiriting" value={form.fio} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                   <label>IP Manzil</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="ipaddress"
-                    placeholder="IP Addressni kiriting"
-                    value={form.ipaddress}
-                    onChange={handleChange}
-                  />
+                  <input type="text" className="form-control" name="ipaddress"
+                    placeholder="IP Addressni kiriting" value={form.ipaddress} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Xizmat turi</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="txt"
-                    placeholder="Xizmat turini kiriting"
-                    value={form.txt}
-                    onChange={handleChange}
-                  />
+                  <input type="text" className="form-control" name="txt"
+                    placeholder="Xizmat turini kiriting" value={form.txt} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Domen</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="domen"
-                    placeholder="Domen name ni kiriting"
-                    value={form.domen}
-                    onChange={handleChange}
-                  />
+                  <input type="text" className="form-control" name="domenname"
+                    placeholder="Domen name ni kiriting" value={form.domenname} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Sana</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="sana"
-                    value={form.sana}
-                    onChange={handleChange}
-                  />
+                  <input type="date" className="form-control" name="sana"
+                    value={form.sana} onChange={handleChange} />
                 </div>
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Bekor qilish</button>
-                <button className="btn btn-primary" onClick={handleAdd}>Saqlash</button>
+                <button className="btn btn-primary" onClick={handleAdd} disabled={loading}>
+                  {loading ? 'Saqlanmoqda...' : 'Saqlash'}
+                </button>
               </div>
             </div>
           </div>
