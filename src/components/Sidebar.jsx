@@ -32,6 +32,24 @@ function Sidebar({ toggled, onToggle }) {
 
       <hr className="sidebar-divider" />
 
+      {/* Qo'shish */}
+      <li className={`nav-item${isActive('/qoshish') ? ' active' : ''}`}>
+        <Link className="nav-link" to="/qoshish">
+          <i className="fas fa-fw fa-plus-circle"></i>
+          <span>Qo'shish</span>
+        </Link>
+      </li>
+
+      {/* Umumiy Ro'yxat */}
+      <li className={`nav-item${isActive('/tables') ? ' active' : ''}`}>
+        <Link className="nav-link" to="/tables">
+          <i className="fas fa-fw fa-table"></i>
+          <span>Umumiy Ro'yxatlar</span>
+        </Link>
+      </li>
+
+      <hr className="sidebar-divider" />
+
       <div className="sidebar-heading">Addons</div>
 
       {/* Pages collapse */}
@@ -43,29 +61,27 @@ function Sidebar({ toggled, onToggle }) {
           aria-expanded={pagesOpen}
         >
           <i className="fas fa-fw fa-folder"></i>
-          <span>Ro`yxatlar</span>
+          <span>Pages</span>
         </a>
         <div className={`collapse${pagesOpen ? ' show' : ''}`}>
           <div className="bg-white py-2 collapse-inner rounded">
-            <h6 className="collapse-header">Asosiy:</h6>
-            <Link className={`collapse-item${isActive('/login') ? ' active' : ''}`} to="/filter-bolimlar">Bo`limlar</Link>
-            <Link className={`collapse-item${isActive('/register') ? ' active' : ''}`} to="/filter-ishchilar">Ishchilar</Link>
-            <Link className={`collapse-item${isActive('/forgot-password') ? ' active' : ''}`} to="/filter-lavozimlar">Lavozimlar</Link>
+            <h6 className="collapse-header">Login Screens:</h6>
+            <Link className={`collapse-item${isActive('/login') ? ' active' : ''}`} to="/login">Login</Link>
+            <Link className={`collapse-item${isActive('/register') ? ' active' : ''}`} to="/register">Register</Link>
+            <Link className={`collapse-item${isActive('/forgot-password') ? ' active' : ''}`} to="/forgot-password">Forgot Password</Link>
             <div className="collapse-divider"></div>
-            <h6 className="collapse-header">Boshqalar</h6>
-            <Link className={`collapse-item${isActive('/404') ? ' active' : ''}`} to="/filter-jihozlar">Jihozlar</Link>
-            <Link className={`collapse-item${isActive('/blank') ? ' active' : ''}`} to="/filter-ip">IP Address</Link>
+            <h6 className="collapse-header">Other Pages:</h6>
+            <Link className={`collapse-item${isActive('/404') ? ' active' : ''}`} to="/404">404 Page</Link>
+            <Link className={`collapse-item${isActive('/blank') ? ' active' : ''}`} to="/blank">Blank Page</Link>
           </div>
         </div>
       </li>
 
       {/* Charts */}
-
-      {/* Tables */}
-      <li className={`nav-item${isActive('/tables') ? ' active' : ''}`}>
-        <Link className="nav-link" to="/tables">
-          <i className="fas fa-fw fa-table"></i>
-          <span>Umumiy Ro`yxatlar</span>
+      <li className={`nav-item${isActive('/charts') ? ' active' : ''}`}>
+        <Link className="nav-link" to="/charts">
+          <i className="fas fa-fw fa-chart-area"></i>
+          <span>Charts</span>
         </Link>
       </li>
 

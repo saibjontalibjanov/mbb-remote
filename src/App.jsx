@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import Charts from './pages/Charts'
 import Tables from './pages/Tables'
 import Blank from './pages/Blank'
+import Qoshish from './pages/Qoshish'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -16,8 +17,9 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      {/* <Route path="/charts" element={<Charts />} /> */}
+      <Route path="/qoshish" element={<Qoshish />} />
       <Route path="/tables" element={<Tables />} />
+      <Route path="/charts" element={<Charts />} />
       <Route path="/blank" element={<Blank />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -3,13 +3,29 @@ import { Link, useNavigate } from 'react-router-dom'
 
 function Login() {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [remember, setRemember] = useState(false)
+  const [login, setLogin]   = useState('')
+  const [parol, setParol]   = useState('')
+  const [error, setError]   = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
-    navigate('/dashboard')
+    setError('')
+    setLoading(true)
+    try {
+      const res = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ login, parol })
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error); setLoading(false); return }
+      localStorage.setItem('user', JSON.stringify(data))
+      navigate('/dashboard')
+    } catch (err) {
+      setError('Server bilan ulanishda xatolik!')
+    }
+    setLoading(false)
   }
 
   return (
@@ -24,16 +40,17 @@ function Login() {
                   <div className="col-lg-6">
                     <div className="p-5">
                       <div className="text-center">
-                        <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                        <h1 className="h4 text-gray-900 mb-4">Xush kelibsiz!</h1>
                       </div>
+                      {error && <div className="alert alert-danger">{error}</div>}
                       <form className="user" onSubmit={handleLogin}>
                         <div className="form-group">
                           <input
-                            type="email"
+                            type="text"
                             className="form-control form-control-user"
-                            placeholder="Enter Email Address..."
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Login..."
+                            value={login}
+                            onChange={(e) => setLogin(e.target.value)}
                             required
                           />
                         </div>
@@ -41,42 +58,16 @@ function Login() {
                           <input
                             type="password"
                             className="form-control form-control-user"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Parol"
+                            value={parol}
+                            onChange={(e) => setParol(e.target.value)}
                             required
                           />
                         </div>
-                        <div className="form-group">
-                          <div className="custom-control custom-checkbox small">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck"
-                              checked={remember}
-                              onChange={(e) => setRemember(e.target.checked)}
-                            />
-                            <label className="custom-control-label" htmlFor="customCheck">Remember Me</label>
-                          </div>
-                        </div>
-                        <button type="submit" className="btn btn-primary btn-user btn-block">
-                          Login
+                        <button type="submit" className="btn btn-primary btn-user btn-block" disabled={loading}>
+                          {loading ? 'Tekshirilmoqda...' : 'Kirish'}
                         </button>
-                        <hr />
-                        <a href="#" className="btn btn-google btn-user btn-block">
-                          <i className="fab fa-google fa-fw"></i> Login with Google
-                        </a>
-                        <a href="#" className="btn btn-facebook btn-user btn-block">
-                          <i className="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                        </a>
                       </form>
-                      <hr />
-                      <div className="text-center">
-                        <Link className="small" to="/forgot-password">Forgot Password?</Link>
-                      </div>
-                      <div className="text-center">
-                        <Link className="small" to="/register">Create an Account!</Link>
-                      </div>
                     </div>
                   </div>
                 </div>
