@@ -50,42 +50,6 @@ function Sidebar({ toggled, onToggle }) {
 
       <hr className="sidebar-divider" />
 
-      <div className="sidebar-heading">Addons</div>
-
-      {/* Pages collapse */}
-      <li className="nav-item">
-        <a
-          className={`nav-link${pagesOpen ? '' : ' collapsed'}`}
-          href="#"
-          onClick={(e) => { e.preventDefault(); setPagesOpen(!pagesOpen) }}
-          aria-expanded={pagesOpen}
-        >
-          <i className="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
-        </a>
-        <div className={`collapse${pagesOpen ? ' show' : ''}`}>
-          <div className="bg-white py-2 collapse-inner rounded">
-            <h6 className="collapse-header">Login Screens:</h6>
-            <Link className={`collapse-item${isActive('/login') ? ' active' : ''}`} to="/login">Login</Link>
-            <Link className={`collapse-item${isActive('/register') ? ' active' : ''}`} to="/register">Register</Link>
-            <Link className={`collapse-item${isActive('/forgot-password') ? ' active' : ''}`} to="/forgot-password">Forgot Password</Link>
-            <div className="collapse-divider"></div>
-            <h6 className="collapse-header">Other Pages:</h6>
-            <Link className={`collapse-item${isActive('/404') ? ' active' : ''}`} to="/404">404 Page</Link>
-            <Link className={`collapse-item${isActive('/blank') ? ' active' : ''}`} to="/blank">Blank Page</Link>
-          </div>
-        </div>
-      </li>
-
-      {/* Charts */}
-      <li className={`nav-item${isActive('/charts') ? ' active' : ''}`}>
-        <Link className="nav-link" to="/charts">
-          <i className="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span>
-        </Link>
-      </li>
-
-      <hr className="sidebar-divider d-none d-md-block" />
 
       <div className="text-center d-none d-md-inline">
         <button className="rounded-circle border-0" id="sidebarToggle" onClick={onToggle}></button>

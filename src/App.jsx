@@ -19,7 +19,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/qoshish" element={<Qoshish />} />
       <Route path="/tables" element={<Tables />} />
-      <Route path="/charts" element={<Charts />} />
+      {/* <Route path="/charts" element={<Charts />} /> */}
       <Route path="/blank" element={<Blank />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
