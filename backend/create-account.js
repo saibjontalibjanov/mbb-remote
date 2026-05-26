@@ -2,32 +2,14 @@ import readline from 'readline'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { dirname } from 'path'
+import { createRequire } from 'module'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const DB_PATH = path.join(__dirname, 'db.json')
+const require = createRequire(import.meta.url)
+const Database = require('better-sqlite3')
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-const ask = (question) => new Promise((resolve) => rl.question(question, resolve))
-
-// Safe db read — handles missing or empty file
-function readDb() {
-  try {
-    if (!fs.existsSync(DB_PATH)) {
-      return { royxat: [], xizmat: [], users: [] }
-    }
-    const content = fs.readFileSync(DB_PATH, 'utf-8').trim()
-    if (!content) return { royxat: [], xizmat: [], users: [] }
-    return JSON.parse(content)
-  } catch (e) {
-    console.log('⚠️  db.json o\'qilmadi, yangi yaratiladi.')
-    return { royxat: [], xizmat: [], users: [] }
-  }
-}
-
-function writeDb(data) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8')
-}
+const ask = (q) => new Promise((resolve) => rl.question(q, resolve))
 
 async function main() {
   console.log('\n╔══════════════════════════════════╗')
@@ -39,60 +21,40 @@ async function main() {
   const login    = await ask('Login     : ')
   const parol    = await ask('Parol     : ')
   const rasmPath = await ask("Rasm yo'li (bo'sh qoldirish mumkin): ")
-
   rl.close()
 
   if (!ism || !login || !parol) {
-    console.log('\n❌ Ism, Login va Parol majburiy!\n')
-    process.exit(1)
+    console.log('\n❌ Ism, Login va Parol majburiy!\n'); process.exit(1)
   }
 
-  // Handle image
-  let rasm = '/img/undraw_profile.svg'
+  let rasm = null
   if (rasmPath && rasmPath.trim()) {
     const fullPath = path.resolve(rasmPath.trim())
     if (fs.existsSync(fullPath)) {
-      try {
-        const ext = path.extname(fullPath).toLowerCase()
-        const mimes = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.webp': 'image/webp' }
-        const mime = mimes[ext] || 'image/jpeg'
-        const imageData = fs.readFileSync(fullPath)
-        rasm = `data:${mime};base64,${imageData.toString('base64')}`
-        console.log('\n📷 Rasm muvaffaqiyatli o\'qildi.')
-      } catch (e) {
-        console.log('\n⚠️  Rasmni o\'qishda xatolik. Default rasm ishlatiladi.')
-      }
+      const ext = path.extname(fullPath).toLowerCase()
+      const mimes = { '.jpg':'image/jpeg','.jpeg':'image/jpeg','.png':'image/png','.gif':'image/gif','.webp':'image/webp' }
+      const mime = mimes[ext] || 'image/jpeg'
+      rasm = `data:${mime};base64,${fs.readFileSync(fullPath).toString('base64')}`
+      console.log('\n📷 Rasm muvaffaqiyatli o\'qildi.')
     } else {
-      console.log('\n⚠️  Rasm fayli topilmadi. Default rasm ishlatiladi.')
+      console.log('\n⚠️  Rasm topilmadi. Default rasm ishlatiladi.')
     }
   }
 
-  // Load db safely
-  const db = readDb()
-  db.users = db.users ?? []
+  const db = new Database(path.join(__dirname, 'mbb.db'))
+  db.exec(`CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, ism TEXT NOT NULL, familiya TEXT, login TEXT UNIQUE NOT NULL, parol TEXT NOT NULL, rasm TEXT, created_at TEXT DEFAULT (datetime('now')))`)
 
-  // Check duplicate login
-  if (db.users.find(u => u.login === login)) {
-    console.log('\n❌ Bu login allaqachon mavjud! Boshqa login tanlang.\n')
-    process.exit(1)
+  const existing = db.prepare('SELECT id FROM users WHERE login = ?').get(login)
+  if (existing) {
+    console.log('\n❌ Bu login allaqachon mavjud!\n'); process.exit(1)
   }
 
-  const newUser = {
-    id: Date.now(),
-    ism, familiya, login, parol, rasm,
-    created_at: new Date().toISOString()
-  }
-
-  db.users.push(newUser)
-  writeDb(db)
+  db.prepare('INSERT INTO users (ism, familiya, login, parol, rasm) VALUES (?,?,?,?,?)').run(ism, familiya, login, parol, rasm)
 
   console.log('\n✅ Account muvaffaqiyatli yaratildi!')
-  console.log(`   👤 Ism     : ${ism} ${familiya}`)
-  console.log(`   🔑 Login   : ${login}`)
-  console.log(`   🌐 Kirish  : http://localhost:5173/login\n`)
+  console.log(`   👤 Ism   : ${ism} ${familiya}`)
+  console.log(`   🔑 Login : ${login}`)
+  console.log(`   🌐 Kirish: http://localhost:5173/login\n`)
 }
 
-main().catch((err) => {
-  console.error('Xatolik:', err.message)
-  process.exit(1)
-})
+main().catch(err => { console.error('Xatolik:', err.message); process.exit(1) })
